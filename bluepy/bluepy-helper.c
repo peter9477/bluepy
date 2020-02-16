@@ -1997,9 +1997,11 @@ static void mgmt_scanning(uint16_t index, uint16_t length,
     const struct mgmt_ev_discovering *ev = param;
     assert(length == sizeof(*ev));
 
-    DBG("Scanning (0x%x): %s", ev->type, ev->discovering? "started" : "ended");
+    if (conn_state != STATE_CONNECTING && conn_state != STATE_CONNECTED) {
+        DBG("Scanning (0x%x): %s", ev->type, ev->discovering? "started" : "ended");
 
-    set_state(ev->discovering? STATE_SCANNING : STATE_DISCONNECTED);
+        set_state(ev->discovering ? STATE_SCANNING : STATE_DISCONNECTED);
+    }
 }
 
 static void mgmt_device_found(uint16_t index, uint16_t length,
